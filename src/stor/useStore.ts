@@ -3,15 +3,25 @@ import { ingestWords, enrichWord, fetchWords } from '../api/words'
 import { getTrainingQueue, postTrainingResult } from '../api/training'
 import { getProgress } from '../api/users'
 import { login as apiLogin } from '../api/auth'
+import api from '../api/axios'
 
 
 
 export const useStore: any = create((set: any, get: any) => ({
+  // auth
+  token: (() => {
+    try {
+      return localStorage.getItem('token')
+    } catch (e) {
+      return null
+    }
+  })(),
+  loading: true,
   user: null,
-  words: [],
-  queue: [],
-  progress: null,
-  setUser: (user: { id: string; name?: string } | null) => set({ user }),
+  isAuthenticated: false,
+  setUser: (user: { id: string; name?: string } | null) => {
+    set({ user, isAuthenticated: Boolean(user) })
+  },
   loadWords: async (user_id: string) => {
     try {
       const data = await fetchWords(user_id)
@@ -74,11 +84,14 @@ export const useStore: any = create((set: any, get: any) => ({
     if (data?.token) {
       try {
         localStorage.setItem('token', data.token)
+        set({ token: data.token })
       } catch (e) {
         /* ignore */
       }
     }
     if (data?.user) set({ user: data.user })
+    // update isAuthenticated after setting user/token
+    set((s: any) => ({ isAuthenticated: Boolean(s.user || s.token) }))
     return data
   },
   logout: () => {
@@ -87,7 +100,34 @@ export const useStore: any = create((set: any, get: any) => ({
     } catch (e) {
       /* ignore */
     }
-    set({ user: null })
+    set({ user: null, token: null, isAuthenticated: false })
+  },
+  // initialize auth state on app start
+  init: async () => {
+    const { token } = get()
+
+    // no token -> not authenticated
+    if (!token) {
+      set({ loading: false, isAuthenticated: false })
+      return
+    }
+
+    try {
+      const res = await api.get('/auth/me')
+      const data = res?.data
+      // normalize: prefer data.user if present
+      const user = data?.user ?? data
+
+      set({ user, loading: false, isAuthenticated: Boolean(user) })
+    } catch (err) {
+      try {
+        localStorage.removeItem('token')
+      } catch (e) {
+        /* ignore */
+      }
+
+      set({ user: null, token: null, loading: false, isAuthenticated: false })
+    }
   },
 }))
 
