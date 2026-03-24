@@ -1,0 +1,64 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+@media (max-width: 560px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+.page-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.page-header__title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: #181c23;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.page-header__subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: #414754;
+  margin: 0;
+}
+
+.page-header__button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(to bottom right, #0059bb, #0070ea);
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 89, 187, 0.2);
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.page-header__button:hover {
+  box-shadow: 0 14px 30px rgba(0, 89, 187, 0.3);
+}
+
+.page-header__button:active {
+  transform: scale(0.95);
+}
+
+.page-header__button .material-symbols-outlined {
+  font-size: 1.125rem;
+}

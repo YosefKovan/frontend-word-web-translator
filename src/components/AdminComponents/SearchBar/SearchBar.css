@@ -1,0 +1,115 @@
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Search input */
+.search-bar__input-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+}
+
+.search-bar__input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.125rem;
+  color: #717786;
+  pointer-events: none;
+}
+
+.search-bar__input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  background: #f1f3fe;
+  border: none;
+  border-radius: 9999px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: #181c23;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.search-bar__input::placeholder {
+  color: #717786;
+}
+
+.search-bar__input:focus {
+  box-shadow: 0 0 0 2px rgba(0, 89, 187, 0.25);
+}
+
+/* Filters row */
+.search-bar__filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Select wrapper */
+.search-bar__select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar__select-icon {
+  position: absolute;
+  left: 10px;
+  font-size: 1rem;
+  color: #717786;
+  pointer-events: none;
+}
+
+.search-bar__select-chevron {
+  position: absolute;
+  right: 8px;
+  font-size: 1rem;
+  color: #717786;
+  pointer-events: none;
+}
+
+.search-bar__select {
+  appearance: none;
+  padding: 10px 32px 10px 34px;
+  background: #f1f3fe;
+  border: none;
+  border-radius: 9999px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #414754;
+  cursor: pointer;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.search-bar__select:focus {
+  box-shadow: 0 0 0 2px rgba(0, 89, 187, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 560px) {
+  .search-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-bar__filters {
+    flex-direction: column;
+  }
+
+  .search-bar__select-wrapper {
+    width: 100%;
+  }
+
+  .search-bar__select {
+    width: 100%;
+  }
+}
