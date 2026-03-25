@@ -3,13 +3,18 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import {type UpdateUserInput} from "../types/updateUserInput";
 
-const FETCH_URL: string = "http://localhost:3000/api/admin/overview";
+const FETCH_URL: string = "/api/admin/overview";
 const UPDATE_URL: string = "http://localhost:3000/api/admin/users";
 const DELETE_URL: string = "http://localhost:3000/api/admin/users";
 
 //fetch admin data
 const fetchAdminData = async (): Promise<AdminData> => {
-  const res = await fetch(FETCH_URL);
+  
+  const headers = {
+    "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyX2JhODYzZDU4MGEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ0MzIxNjB9.rY1MB9ye3hjmcQYq1badsq5DOs7st4PwmIqXNgStSsQ`,
+  }
+  
+  const res = await fetch(FETCH_URL, { headers });
   if (!res.ok) throw new Error("Network error");
   return res.json();
 };
