@@ -3,20 +3,31 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import {type UpdateUserInput} from "../types/updateUserInput";
 
-const FETCH_URL: string = "http://localhost:3000/api/admin/overview";
-const UPDATE_URL: string = "http://localhost:3000/api/admin/users";
-const DELETE_URL: string = "http://localhost:3000/api/admin/users";
+const FETCH_URL: string = "/api/admin/admin/overview";
+const UPDATE_URL: string = "/api/admin/admin/users";
+const DELETE_URL: string = "/api/admin/admin/users";
+
+const getAuthHeaders = (withBody = false): HeadersInit => {
+  const token = localStorage.getItem("token");
+  return {
+    ...(withBody ? { "Content-Type": "application/json" } : {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
 
 //fetch admin data
 const fetchAdminData = async (): Promise<AdminData> => {
-  const res = await fetch(FETCH_URL);
+  const res = await fetch(FETCH_URL, { headers: getAuthHeaders(false) });
   if (!res.ok) throw new Error("Network error");
   return res.json();
 };
 
 //delete user function
 const deleteUser = async (userId: string): Promise<void> => {
-  const res = await fetch(`${DELETE_URL}/${userId}`, { method: "DELETE" });
+  const res = await fetch(`${DELETE_URL}/${userId}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(false),
+  });
 
   if (!res.ok) {
     // This will trigger the 'onError' in useMutation
@@ -31,7 +42,7 @@ const updateUser = async (updateData: UpdateUserInput): Promise<void> => {
   const res = await fetch(`${UPDATE_URL}/${updateData.target_user_id}`, {
     method: "POST",
     body: JSON.stringify(updateData),
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(true),
   });
 
   if(!res.ok){

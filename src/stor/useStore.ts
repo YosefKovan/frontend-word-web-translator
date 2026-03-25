@@ -10,22 +10,28 @@ import api from '../api/axios'
 export const useStore: any = create((set: any, get: any) => ({
   // auth
   token: (() => {
+    try { return localStorage.getItem('token') } catch { return null }
+  })(),
+  user: (() => {
     try {
-      return localStorage.getItem('token')
-    } catch (e) {
-      return null
-    }
+      const token = localStorage.getItem('token')
+      if (!token) return null
+      const raw = localStorage.getItem('user')
+      return raw ? JSON.parse(raw) : null
+    } catch { return null }
   })(),
   loading: true,
-  user: null,
-  isAuthenticated: false,
+  isAuthenticated: (() => {
+    try { return Boolean(localStorage.getItem('token')) } catch { return false }
+  })(),
   setUser: (user: { id: string; name?: string } | null) => {
     set({ user, isAuthenticated: Boolean(user) })
   },
   loadWords: async (user_id: string) => {
     try {
       const data = await fetchWords(user_id)
-      set({ words: data || [] })
+      const words = Array.isArray(data) ? data : (data?.words ?? data?.items ?? [])
+      set({ words })
     } catch (e) {
       console.error('loadWords failed', e)
     }
@@ -80,26 +86,29 @@ export const useStore: any = create((set: any, get: any) => ({
   },
   login: async (email: string, password: string) => {
     const data = await apiLogin({ email, password })
-    // expect { token: string, user: { id, name, role } }
-    if (data?.token) {
+    // server returns { access_token, user_id, role, expires_at }
+    const token = data?.access_token
+    const user = token ? { id: data.user_id, role: data.role } : null
+    if (token) {
       try {
-        localStorage.setItem('token', data.token)
-        set({ token: data.token })
-      } catch (e) {
-        /* ignore */
-      }
+        localStorage.setItem('token', token)
+      } catch { /* ignore */ }
+      set({ token })
     }
-    if (data?.user) set({ user: data.user })
-    // update isAuthenticated after setting user/token
-    set((s: any) => ({ isAuthenticated: Boolean(s.user || s.token) }))
+    if (user) {
+      try {
+        localStorage.setItem('user', JSON.stringify(user))
+      } catch { /* ignore */ }
+      set({ user })
+    }
+    set({ isAuthenticated: Boolean(token) })
     return data
   },
   logout: () => {
     try {
       localStorage.removeItem('token')
-    } catch (e) {
-      /* ignore */
-    }
+      localStorage.removeItem('user')
+    } catch { /* ignore */ }
     set({ user: null, token: null, isAuthenticated: false })
   },
   // initialize auth state on app start
@@ -122,9 +131,8 @@ export const useStore: any = create((set: any, get: any) => ({
     } catch (err) {
       try {
         localStorage.removeItem('token')
-      } catch (e) {
-        /* ignore */
-      }
+        localStorage.removeItem('user')
+      } catch { /* ignore */ }
 
       set({ user: null, token: null, loading: false, isAuthenticated: false })
     }

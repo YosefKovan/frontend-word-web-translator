@@ -19,8 +19,8 @@ const PracticeRound: React.FC = () => {
 
   if (!user) return <div>Please sign in to practice</div>
 
-  if (user.role && user.role !== 'learner') {
-    return <div>Your account does not have the learner role and cannot practice.</div>
+  if (user.role && user.role !== 'user') {
+    return <div>Your account does not have the user role and cannot practice.</div>
   }
 
   if (!queue || queue.length === 0) return <div>No items to practice</div>
