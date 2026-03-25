@@ -7,7 +7,7 @@ const NavBar: React.FC<{ onNavigate: (page: string) => void }> = ({ onNavigate }
   const logout = useStore((s: any) => s.logout)
   return (
     <nav className="nav">
-      <button onClick={() => onNavigate('dashboard')}>Dashboard</button>
+      <button onClick={() => onNavigate('admin')}>Dashboard</button>
       <button onClick={() => onNavigate('library')}>Words</button>
       <button onClick={() => onNavigate('import')}>Import</button>
       <button onClick={() => onNavigate('practice')}>Practice</button>
