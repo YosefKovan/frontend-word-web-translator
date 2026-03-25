@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import {type UpdateUserInput} from "../types/updateUserInput";
 
-const FETCH_URL: string = "/api/admin/admin/overview";
+const FETCH_URL: string = "https://admin-service-e3251105-dev.apps.rm2.thpm.p1.openshiftapps.com/api/admin/overview";
 const UPDATE_URL: string = "/api/admin/admin/users";
 const DELETE_URL: string = "/api/admin/admin/users";
 

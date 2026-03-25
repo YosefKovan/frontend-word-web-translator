@@ -1,0 +1,125 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f6fb;
+}
+
+.login-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0, 89, 187, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.login-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-card__title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: #181c23;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.login-card__subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: #414754;
+  margin: 0;
+}
+
+.login-card__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-card__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-card__label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #181c23;
+}
+
+.login-card__input {
+  padding: 10px 14px;
+  border: 1.5px solid #e0e4ef;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9375rem;
+  color: #181c23;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.login-card__input:focus {
+  border-color: #0059bb;
+}
+
+.login-card__button {
+  margin-top: 4px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(to bottom right, #0059bb, #0070ea);
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 89, 187, 0.2);
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.login-card__button:hover {
+  box-shadow: 0 14px 30px rgba(0, 89, 187, 0.3);
+}
+
+.login-card__button:active {
+  transform: scale(0.98);
+}
+
+.login-card__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-card__footer {
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: #414754;
+  margin: 0;
+}
+
+.login-card__footer a {
+  color: #0059bb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-card__footer a:hover {
+  text-decoration: underline;
+}

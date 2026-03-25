@@ -8,18 +8,21 @@ const NavBar: React.FC = () => {
   const navigate = useNavigate()
   return (
     <nav className="nav">
-      <button onClick={() => navigate('/admin')}>Dashboard</button>
+      {user?.role === 'admin' && <button onClick={() => navigate('/admin')}>Dashboard</button>}
       <button onClick={() => navigate('/library')}>Words</button>
       <button onClick={() => navigate('/import')}>Import</button>
       <button onClick={() => navigate('/practice')}>Practice</button>
       <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
         {user ? (
-          <>
-            <div>{`Hi, ${user.name || user.id}`} {user.role ? `(${user.role})` : ''}</div>
-            <button onClick={() => { logout(); navigate('/login') }}>Sign out</button>
-          </>
+          <button onClick={() => { logout(); navigate('/login') }}>
+            <span className="material-symbols-outlined">logout</span>
+            Sign out
+          </button>
         ) : (
-          <button onClick={() => navigate('/login')}>Sign in</button>
+          <button onClick={() => navigate('/login')}>
+            <span className="material-symbols-outlined">person</span>
+            Sign in
+          </button>
         )}
       </div>
     </nav>
