@@ -1,0 +1,129 @@
+.status-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: status-overlay-fade-in 0.15s ease;
+}
+
+@keyframes status-overlay-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.status-modal {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 320px;
+  padding: 32px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  animation: status-modal-slide-in 0.18s ease;
+}
+
+@keyframes status-modal-slide-in {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.status-modal__icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.status-modal__icon-wrap--activate {
+  background: rgba(0, 110, 37, 0.08);
+}
+
+.status-modal__icon-wrap--deactivate {
+  background: rgba(113, 119, 134, 0.1);
+}
+
+.status-modal__icon {
+  font-size: 2rem;
+}
+
+.status-modal__icon-wrap--activate .status-modal__icon {
+  color: #006e25;
+}
+
+.status-modal__icon-wrap--deactivate .status-modal__icon {
+  color: #717786;
+}
+
+.status-modal__title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #181c23;
+  margin: 0 0 10px;
+}
+
+.status-modal__body {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: #717786;
+  margin: 0 0 24px;
+  line-height: 1.55;
+}
+
+.status-modal__body strong {
+  color: #181c23;
+  font-weight: 600;
+}
+
+.status-modal__footer {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.status-modal__btn {
+  flex: 1;
+  padding: 11px 0;
+  border-radius: 9999px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s ease;
+}
+
+.status-modal__btn--cancel {
+  background: #ebedf9;
+  color: #414754;
+}
+
+.status-modal__btn--cancel:hover {
+  background: #d8dbf0;
+}
+
+.status-modal__btn--activate {
+  background: #006e25;
+  color: #ffffff;
+}
+
+.status-modal__btn--activate:hover {
+  background: #005a1e;
+}
+
+.status-modal__btn--deactivate {
+  background: #717786;
+  color: #ffffff;
+}
+
+.status-modal__btn--deactivate:hover {
+  background: #5a5e6a;
+}

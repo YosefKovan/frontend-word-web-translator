@@ -1,0 +1,63 @@
+.word-catcher-popup {
+  position: absolute;
+  z-index: 2147483647; 
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  padding: 16px;
+  width: 280px;
+  font-family: system-ui, -apple-system, sans-serif;
+  direction: rtl;
+  color: #1e293b;
+}
+
+.wc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.wc-word {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #0f172a;
+}
+
+.wc-level {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.wc-translation {
+  font-size: 1.1rem;
+  color: #3b82f6;
+  margin-bottom: 4px;
+}
+
+.wc-definition {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+#wc-save-btn {
+  width: 100%;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#wc-save-btn:hover { background: #2563eb; }
+.wc-success, .wc-duplicate, .wc-loader { text-align: center; font-weight: bold; }

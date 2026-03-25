@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useEffect } from 'react'
 import './App.css'
 import NavBar from './components/NavBar'
@@ -42,3 +43,23 @@ function App() {
 }
 
 export default App
+=======
+import "./App.css";
+import AdminPage from "./pages/AdminPage/AdminPage";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {QueryClient,QueryClientProvider} from "@tanstack/react-query";
+
+const queryClient = new QueryClient()
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AdminPage />
+      <ToastContainer position="top-right" autoClose={5000} />
+    </QueryClientProvider>
+  );
+}
+
+export default App;
+>>>>>>> 632e612904e6d7d2c9008235f4e374901cb5e7f7
