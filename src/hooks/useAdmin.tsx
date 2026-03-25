@@ -7,13 +7,14 @@ const FETCH_URL: string = "http://localhost:3000/api/admin/overview";
 const UPDATE_URL: string = "http://localhost:3000/api/admin/users";
 const DELETE_URL: string = "http://localhost:3000/api/admin/users";
 
-// Mock API functions
+//fetch admin data
 const fetchAdminData = async (): Promise<AdminData> => {
   const res = await fetch(FETCH_URL);
   if (!res.ok) throw new Error("Network error");
   return res.json();
 };
 
+//delete user function
 const deleteUser = async (userId: string): Promise<void> => {
   const res = await fetch(`${DELETE_URL}/${userId}`, { method: "DELETE" });
 
@@ -21,8 +22,11 @@ const deleteUser = async (userId: string): Promise<void> => {
     // This will trigger the 'onError' in useMutation
     throw new Error(`Failed to delete: ${res.status} ${res.statusText}`);
   }
+
+  return await res.json();
 };
 
+//update user function
 const updateUser = async (updateData: UpdateUserInput): Promise<void> => {
   const res = await fetch(`${UPDATE_URL}/${updateData.target_user_id}`, {
     method: "POST",
@@ -31,10 +35,16 @@ const updateUser = async (updateData: UpdateUserInput): Promise<void> => {
   });
 
   if(!res.ok){
-    throw new Error(`Failed to delete: ${res.status} ${res.statusText}`);
+    throw new Error(`Failed to update: ${res.status} ${res.statusText}`);
   }
+
+  return await res.json();
 }
 
+
+//=========================================
+//          use admin hook 
+//=========================================
 export function useAdmin() {
   const queryClient = useQueryClient();
 

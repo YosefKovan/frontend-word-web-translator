@@ -2,13 +2,7 @@ import "./App.css";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import {QueryClient,QueryClientProvider} from "@tanstack/react-query";
 
 const queryClient = new QueryClient()
 
