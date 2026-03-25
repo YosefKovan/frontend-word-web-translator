@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'https://data1-words-e3251105-dev.apps.rm2.thpm.p1.openshiftapps.com';
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   

@@ -1,4 +1,18 @@
-const MOCK_USER_ID = "user_12345abc";
+async function getOrCreateUserId() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['userId'], (result) => {
+      if (result.userId) {
+        resolve(result.userId);
+      } else {
+        const newId = "usr_" + Math.random().toString(36).substr(2, 9);
+        chrome.storage.local.set({ userId: newId }, () => {
+          console.log("נוצר יוזר חדש:", newId);
+          resolve(newId);
+        });
+      }
+    });
+  });
+}
 
 document.addEventListener('dblclick', async (event) => {
   const selection = window.getSelection();
@@ -13,20 +27,20 @@ document.addEventListener('dblclick', async (event) => {
 
   showLoadingPopup(x, y);
 
-  const duplicateCheck = await chrome.runtime.sendMessage({ 
-    action: 'CHECK_DUPLICATE', word: word, userId: MOCK_USER_ID 
-  });
+  const currentUserId = await getOrCreateUserId();
 
-  if (duplicateCheck.exists) {
-    updatePopupToDuplicate(word);
-    return;
-  }
+  const duplicateCheck = await chrome.runtime.sendMessage({ 
+    action: 'CHECK_DUPLICATE', 
+    word: word, 
+    userId: currentUserId 
+  });
 
   const enrichedData = await chrome.runtime.sendMessage({ 
-    action: 'ENRICH_WORD', word: word 
+    action: 'ENRICH_WORD', 
+    word: word 
   });
 
-  updatePopupToEnriched(enrichedData, context, x, y);
+  updatePopupToEnriched(enrichedData, context, x, y, currentUserId, duplicateCheck.exists);
 });
 
 
@@ -46,46 +60,53 @@ function showLoadingPopup(x, y) {
   currentPopup.innerHTML = `<div class="wc-loader">טוען נתונים...</div>`;
 }
 
-function updatePopupToDuplicate(word) {
-  currentPopup.innerHTML = `
-    <div class="wc-duplicate">
-      <strong>${word}</strong> כבר שמורה אצלך! 😎
-    </div>
-  `;
-  setTimeout(() => currentPopup.remove(), 2500);
-}
+function updatePopupToEnriched(data, context, x, y, currentUserId, isDuplicate) {
+  const buttonHtml = isDuplicate
+    ? `<button id="wc-save-btn" disabled style="background: #10b981; cursor: default; box-shadow: none;">כבר שמור אצלך ✔️</button>`
+    : `<button id="wc-save-btn">שמור למסלול שלי</button>`;
 
-function updatePopupToEnriched(data, context, x, y) {
   currentPopup.innerHTML = `
     <div class="wc-header">
       <span class="wc-word">${data.word}</span>
-      <span class="wc-level">${data.difficulty_level}</span>
+      <span class="wc-level">${data.difficulty_level || 'B2'}</span>
     </div>
     <div class="wc-translation">${data.translation}</div>
     <div class="wc-definition">${data.definition}</div>
-    <button id="wc-save-btn">שמור למסלול שלי</button>
+    ${buttonHtml}
   `;
 
-  document.getElementById('wc-save-btn').addEventListener('click', async () => {
-    document.getElementById('wc-save-btn').innerText = "שומר...";
-    
-    const payload = {
-      word: data.word,
-      user_id: MOCK_USER_ID,
-      source: "extension",
-      context: context
-    };
+  if (!isDuplicate) {
+    document.getElementById('wc-save-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('wc-save-btn');
+      btn.innerText = "שומר...";
+      btn.disabled = true;
+      
+      const payload = {
+        word: data.word,
+        user_id: currentUserId, 
+        source: "extension",
+        context: context
+      };
 
-    const ingestResponse = await chrome.runtime.sendMessage({
-      action: 'INGEST_WORD',
-      payload: payload
+      const ingestResponse = await chrome.runtime.sendMessage({
+        action: 'INGEST_WORD',
+        payload: payload
+      });
+
+      if (ingestResponse && ingestResponse.status === "created") {
+        currentPopup.innerHTML = `<div class="wc-success">המילה נשמרה בהצלחה! 🎉</div>`;
+        setTimeout(() => {
+          if (currentPopup) {
+            currentPopup.remove();
+            currentPopup = null;
+          }
+        }, 2000);
+      } else {
+        btn.innerText = "שגיאה, נסה שוב";
+        btn.disabled = false;
+      }
     });
-
-    if (ingestResponse.status === "created") {
-      currentPopup.innerHTML = `<div class="wc-success">המילה נשמרה בהצלחה! 🎉</div>`;
-      setTimeout(() => currentPopup.remove(), 2000);
-    }
-  });
+  }
 }
 
 document.addEventListener('mousedown', (e) => {
