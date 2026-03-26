@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import {type UpdateUserInput} from "../types/updateUserInput";
 
 const FETCH_URL: string = "https://admin-service-e3251105-dev.apps.rm2.thpm.p1.openshiftapps.com/api/admin/overview";
-const UPDATE_URL: string = "/api/admin/admin/users";
-const DELETE_URL: string = "/api/admin/admin/users";
+const UPDATE_URL: string = "https://admin-service-e3251105-dev.apps.rm2.thpm.p1.openshiftapps.com/api/admin/users";
+const DELETE_URL: string = "https://admin-service-e3251105-dev.apps.rm2.thpm.p1.openshiftapps.com/api/admin/users";
 
 const getAuthHeaders = (withBody = false): HeadersInit => {
   const token = localStorage.getItem("token");
@@ -39,17 +39,22 @@ const deleteUser = async (userId: string): Promise<void> => {
 
 //update user function
 const updateUser = async (updateData: UpdateUserInput): Promise<void> => {
-  const res = await fetch(`${UPDATE_URL}/${updateData.target_user_id}`, {
+    
+  const res = await fetch(`${UPDATE_URL}/${updateData.target_user_id}/action`, {
     method: "POST",
-    body: JSON.stringify(updateData),
+    body: JSON.stringify({ ...updateData, admin_id: localStorage.getItem("userId") }),
     headers: getAuthHeaders(true),
   });
+  
+  const json = await res.json();
+
+  console.log("Update response:", json); // Log the response for debugging
 
   if(!res.ok){
     throw new Error(`Failed to update: ${res.status} ${res.statusText}`);
   }
 
-  return await res.json();
+  return await json;
 }
 
 

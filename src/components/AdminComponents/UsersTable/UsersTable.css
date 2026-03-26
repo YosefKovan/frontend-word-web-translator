@@ -5,6 +5,14 @@
   overflow-x: auto;
 }
 
+.users-table__row--clickable {
+  cursor: pointer;
+}
+
+.users-table__row--clickable:hover td {
+  background: #f5f6fb;
+}
+
 .users-table {
   width: 100%;
   border-collapse: collapse;

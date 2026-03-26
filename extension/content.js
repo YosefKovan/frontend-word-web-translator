@@ -1,15 +1,7 @@
-async function getOrCreateUserId() {
+function getAuthData() {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['userId'], (result) => {
-      if (result.userId) {
-        resolve(result.userId);
-      } else {
-        const newId = "usr_" + Math.random().toString(36).substr(2, 9);
-        chrome.storage.local.set({ userId: newId }, () => {
-          console.log("נוצר יוזר חדש:", newId);
-          resolve(newId);
-        });
-      }
+    chrome.storage.local.get(['token', 'userId'], (result) => {
+      resolve({ token: result.token || null, userId: result.userId || null });
     });
   });
 }
@@ -25,22 +17,30 @@ document.addEventListener('dblclick', async (event) => {
   const x = event.pageX;
   const y = event.pageY;
 
+  const { token, userId } = await getAuthData();
+  console.log('[WordCatcher] token:', token ? 'found' : 'null', '| userId:', userId ? 'found' : 'null');
+
+  if (!token || !userId) {
+    showLoginRequiredPopup(x, y);
+    return;
+  }
+
   showLoadingPopup(x, y);
 
-  const currentUserId = await getOrCreateUserId();
-
-  const duplicateCheck = await chrome.runtime.sendMessage({ 
-    action: 'CHECK_DUPLICATE', 
-    word: word, 
-    userId: currentUserId 
+  const duplicateCheck = await chrome.runtime.sendMessage({
+    action: 'CHECK_DUPLICATE',
+    word: word,
+    userId: userId,
+    token: token
   });
 
-  const enrichedData = await chrome.runtime.sendMessage({ 
-    action: 'ENRICH_WORD', 
-    word: word 
+  const enrichedData = await chrome.runtime.sendMessage({
+    action: 'ENRICH_WORD',
+    word: word,
+    token: token
   });
 
-  updatePopupToEnriched(enrichedData, context, x, y, currentUserId, duplicateCheck.exists);
+  updatePopupToEnriched(enrichedData, context, x, y, userId, token, duplicateCheck.exists);
 });
 
 
@@ -60,7 +60,12 @@ function showLoadingPopup(x, y) {
   currentPopup.innerHTML = `<div class="wc-loader">טוען נתונים...</div>`;
 }
 
-function updatePopupToEnriched(data, context, x, y, currentUserId, isDuplicate) {
+function showLoginRequiredPopup(x, y) {
+  createBasePopup(x, y);
+  currentPopup.innerHTML = `<div class="wc-loader">יש להתחבר כדי לשמור מילים</div>`;
+}
+
+function updatePopupToEnriched(data, context, x, y, currentUserId, webToken, isDuplicate) {
   const buttonHtml = isDuplicate
     ? `<button id="wc-save-btn" disabled style="background: #10b981; cursor: default; box-shadow: none;">כבר שמור אצלך ✔️</button>`
     : `<button id="wc-save-btn">שמור למסלול שלי</button>`;
@@ -85,7 +90,8 @@ function updatePopupToEnriched(data, context, x, y, currentUserId, isDuplicate) 
         word: data.word,
         user_id: currentUserId, 
         source: "extension",
-        context: context
+        context: context,
+        token: webToken
       };
 
       const ingestResponse = await chrome.runtime.sendMessage({
