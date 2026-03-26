@@ -3,6 +3,7 @@ import type { User, UserRole } from '../../../types/user';
 import UserSettingsModal from '../UserSettingsModal/UserSettingsModal';
 import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
 import StatusConfirmModal from '../StatusConfirmModal/StatusConfirmModal';
+import UserProgressModal from '../UserProgressModal/UserProgressModal';
 import './UsersTable.css';
 import {useAdmin} from "../../../hooks/useAdmin";
 
@@ -21,6 +22,7 @@ export default function UsersTable({ users }: UsersTableProps) {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [userToToggleStatus, setUserToToggleStatus] = useState<User | null>(null);
+  const [userProgress, setUserProgress] = useState<User | null>(null);
 
   function handleConfirmDelete() {
     if (userToDelete) {
@@ -35,8 +37,8 @@ export default function UsersTable({ users }: UsersTableProps) {
 
   function handleConfirmToggleStatus() {
     if (userToToggleStatus) {
-      const newStatus = userToToggleStatus.status === 'active' ? 'inactive' : 'active';
-      updateUser({ action_type: 'change_status', target_user_id: userToToggleStatus.user_id, new_status: newStatus });
+      const action_type = userToToggleStatus.status === 'active' ? 'deactivate' : 'activate';
+      updateUser({ action_type, target_user_id: userToToggleStatus.user_id });
       setUserToToggleStatus(null);
     }
   }
@@ -68,7 +70,7 @@ export default function UsersTable({ users }: UsersTableProps) {
             ) : (
               users.map((user) => {
                 return (
-                  <tr key={user.user_id}>
+                  <tr key={user.user_id} className="users-table__row--clickable" onClick={() => setUserProgress(user)}>
                     <td className="users-table__username" data-label="Username">
                       <span className="users-table__name">{user.name}</span>
                     </td>
@@ -95,7 +97,7 @@ export default function UsersTable({ users }: UsersTableProps) {
                     </td>
                     <td className="users-table__number" data-label="Words Count">{user.words_count.toLocaleString()}</td>
                     <td className="users-table__number" data-label="Progress Score">{user.progress_score}</td>
-                    <td className="users-table__actions" data-label="Actions">
+                    <td className="users-table__actions" data-label="Actions" onClick={(e) => e.stopPropagation()}>
                       <div className="users-table__actions-group">
                         <button
                           className="users-table__action-btn users-table__action-btn--role"
@@ -154,6 +156,13 @@ export default function UsersTable({ users }: UsersTableProps) {
           user={userToToggleStatus}
           onClose={() => setUserToToggleStatus(null)}
           onConfirm={handleConfirmToggleStatus}
+        />
+      )}
+
+      {userProgress && (
+        <UserProgressModal
+          user={userProgress}
+          onClose={() => setUserProgress(null)}
         />
       )}
     </>

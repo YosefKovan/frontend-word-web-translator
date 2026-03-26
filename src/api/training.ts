@@ -31,3 +31,8 @@ export async function startSession(userId : string, count : number): Promise<Ses
 export async function submitResult(payload: SubmitResultPayload): Promise<void> {
   await api.post(BASE_URL + '/api/training/results', payload)
 }
+
+export async function getTrainingResult(userId: string): Promise<Record<string, unknown>> {
+  const res = await api.get(BASE_URL + `/api/users/${userId}/progress`);  
+  return res.data
+}
