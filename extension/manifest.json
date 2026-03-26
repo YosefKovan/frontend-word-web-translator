@@ -4,11 +4,17 @@
   "version": "1.0",
   "description": "לוכד מילים, מעשיר ושומר למסלול הלמידה",
   "permissions": ["storage"],
-  "host_permissions": ["http://localhost:3000/*"],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
+    {
+      "matches": ["http://localhost:5173/*"],
+      "js": ["sync.js"]
+    },
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"],
