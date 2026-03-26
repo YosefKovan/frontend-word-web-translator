@@ -77,6 +77,33 @@
   border-color: #0059bb;
 }
 
+.register-card__input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.register-card__input-wrapper .register-card__input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.register-card__eye {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+}
+
+.register-card__eye .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
 .register-card__button {
   margin-top: 4px;
   padding: 12px;
@@ -125,4 +152,10 @@
 
 .register-card__footer a:hover {
   text-decoration: underline;
+}
+
+.register-card__error {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #dc2626;
 }

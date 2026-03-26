@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   gap: 20px;
   padding: 32px 16px;
 }
@@ -365,7 +366,7 @@ body{
 }
 
 .app-root{width:100%;padding:12px}
-main{min-height:60vh}
+main{}
 
 button{font-family:inherit}
 
@@ -376,12 +377,56 @@ button{font-family:inherit}
 /* NavBar */
 .nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
   padding: 12px;
   background: transparent;
   border-bottom: 1px solid var(--border);
 }
+
+.nav__logo {
+  font-size: 2rem;
+  color: var(--accent);
+  margin-right: 4px;
+}
+
+.nav__desktop {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  align-items: center;
+}
+
+.nav__hamburger {
+  display: none !important;
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  padding: 6px;
+  border-radius: 8px;
+  font-size: 2.4rem;
+}
+
+.nav__hamburger .material-symbols-outlined {
+  font-size: 2.4rem;
+}
+
+.nav__hamburger:hover {
+  background: var(--accent-bg);
+}
+
+.nav__mobile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0 4px;
+  border-top: 1px solid var(--border);
+}
+
 .nav button {
   display: flex;
   align-items: center;
@@ -392,14 +437,25 @@ button{font-family:inherit}
   border-radius: 8px;
   cursor: pointer;
   color: var(--text);
+  font-size: 1rem;
 }
 
 .nav button .material-symbols-outlined {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
+
 .nav button:hover {
   background: var(--accent-bg);
   color: var(--accent-600);
+}
+
+@media (max-width: 640px) {
+  .nav__desktop {
+    display: none;
+  }
+  .nav__hamburger {
+    display: flex !important;
+  }
 }
 
 /* WordCard */

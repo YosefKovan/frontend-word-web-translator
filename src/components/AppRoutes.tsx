@@ -7,6 +7,7 @@ import Login from '../pages/Login/Login'
 import Register from '../pages/Register/Register'
 import AdminPage from '../pages/AdminPage/AdminPage'
 import Practice from '../pages/Practice'
+import UserProgress from '../pages/UserProgress/UserProgress'
 import { ProtectedRoute } from './ProtectedRoute'
 import { ToastContainer } from 'react-toastify'
 import useStore from '../stor/useStore'
@@ -32,6 +33,7 @@ export default function AppRoutes() {
           <Route path="/library" element={<ProtectedRoute><WordsLibrary /></ProtectedRoute>} />
           <Route path="/import" element={<ProtectedRoute><ImportWords /></ProtectedRoute>} />
           <Route path="/practice" element={<ProtectedRoute><Practice /></ProtectedRoute>} />
+          <Route path="/progress" element={<ProtectedRoute><UserProgress /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute role="admin"><AdminPage /></ProtectedRoute>} />
           <Route path="*" element={!user ? <Navigate to="/login" replace /> : user.role === "admin" ? <AdminPage /> : <WordsLibrary />} />
         </Routes>

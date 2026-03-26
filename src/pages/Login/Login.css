@@ -74,6 +74,33 @@
   border-color: #0059bb;
 }
 
+.login-card__input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-card__input-wrapper .login-card__input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.login-card__eye {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+}
+
+.login-card__eye .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
 .login-card__button {
   margin-top: 4px;
   padding: 12px;
@@ -122,4 +149,10 @@
 
 .login-card__footer a:hover {
   text-decoration: underline;
+}
+
+.login-card__error {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #dc2626;
 }

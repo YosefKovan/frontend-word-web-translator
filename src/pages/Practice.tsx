@@ -1,18 +1,18 @@
 import { useState, useRef } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { usePractice } from '../hooks/usePractice'
 import Spinner from '../components/Spinner/Spinner'
 
 export default function Practice() {
   const token = localStorage.getItem('token')
   const userId = localStorage.getItem('userId')
+  const navigate = useNavigate()
 
   if (!userId) return <Navigate to="/login" replace />
 
-  const { queue, sessionId, isPending, error, submit, progress, isProgressPending, fetchProgress } = usePractice(userId)
+  const { queue, sessionId, isPending, error, submit } = usePractice(userId)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [flipped, setFlipped] = useState(false)
-  const [done, setDone] = useState(false)
   const startTimeRef = useRef<number>(Date.now())
 
   if (!token) return <Navigate to="/login" replace />
@@ -34,49 +34,13 @@ export default function Practice() {
 
     if (currentIndex < total - 1) {
       setFlipped(false)
-      startTimeRef.current = Date.now()
-      setCurrentIndex(currentIndex + 1)
+      setTimeout(() => {
+        setCurrentIndex(currentIndex + 1)
+        startTimeRef.current = Date.now()
+      }, 500)
     } else {
-      fetchProgress()
-      setDone(true)
+      navigate('/progress')
     }
-  }
-
-  if (done) {
-    return (
-      <div className="practice-container">
-        {isProgressPending ? <Spinner /> : (
-          <div className="practice-results-card">
-            <h2 className="practice-results__title">Session Complete!</h2>
-            {progress ? (
-              <div className="practice-results__stats">
-                <div className="practice-results__stat">
-                  <span className="practice-results__stat-value">{progress.total_words ?? '—'}</span>
-                  <span className="practice-results__stat-label">Total Words</span>
-                </div>
-                <div className="practice-results__stat">
-                  <span className="practice-results__stat-value">{progress.words_learned ?? '—'}</span>
-                  <span className="practice-results__stat-label">Words Learned</span>
-                </div>
-                <div className="practice-results__stat">
-                  <span className="practice-results__stat-value">{progress.accuracy != null ? `${Math.round(progress.accuracy * 100)}%` : '—'}</span>
-                  <span className="practice-results__stat-label">Accuracy</span>
-                </div>
-                <div className="practice-results__stat">
-                  <span className="practice-results__stat-value">{progress.streak ?? '—'}</span>
-                  <span className="practice-results__stat-label">Day Streak</span>
-                </div>
-              </div>
-            ) : (
-              <p style={{ color: '#888' }}>Could not load progress.</p>
-            )}
-            <button className="btn-know" onClick={() => window.location.reload()}>
-              Practice Again
-            </button>
-          </div>
-        )}
-      </div>
-    )
   }
 
   return (

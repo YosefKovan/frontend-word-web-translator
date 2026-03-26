@@ -1,30 +1,31 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import useStore from '../../stor/useStore'
-import { useToast } from '../../components/ToastProvider'
+import ErrorBox from '../../components/ErrorBox/ErrorBox'
 import './Login.css'
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const login = useStore((s: any) => s.login)
-  const { show } = useToast()
   const navigate = useNavigate()
 
   const submit = async (e: { preventDefault(): void }) => {
     e.preventDefault()
+    setError('')
     setLoading(true)
     try {
       const res = await login(email, password)
       if (res?.access_token) {
-        show('Signed in', 'success')
         navigate('/')
       } else {
-        show('Login failed', 'error')
+        setError('Invalid email or password.')
       }
     } catch (err) {
-      show('Login error', 'error')
+      setError('Login failed. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -37,6 +38,8 @@ const Login: React.FC = () => {
           <h1 className="login-card__title">Welcome back</h1>
           <p className="login-card__subtitle">Sign in to continue to your account</p>
         </div>
+
+        <ErrorBox message={error} />
 
         <form className="login-card__form" onSubmit={submit}>
           <div className="login-card__field">
@@ -52,14 +55,19 @@ const Login: React.FC = () => {
           </div>
           <div className="login-card__field">
             <label className="login-card__label">Password</label>
-            <input
-              className="login-card__input"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-            />
+            <div className="login-card__input-wrapper">
+              <input
+                className="login-card__input"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+              <button type="button" className="login-card__eye" onClick={() => setShowPassword(v => !v)}>
+                <span className="material-symbols-outlined">{showPassword ? 'visibility_off' : 'visibility'}</span>
+              </button>
+            </div>
           </div>
           <button className="login-card__button" type="submit" disabled={loading}>
             <span className="material-symbols-outlined">login</span>
