@@ -1,3 +1,158 @@
+/* ── Practice Page ── */
+.practice-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 32px 16px;
+}
+
+.practice-progress-bar-wrapper {
+  width: 320px;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.practice-progress-bar {
+  height: 100%;
+  background: #4a90e2;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.practice-progress-label {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+/* flip container */
+.practice-card-scene {
+  width: 320px;
+  min-height: 180px;
+  perspective: 800px;
+}
+
+.practice-card {
+  width: 100%;
+  min-height: 180px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+  border-radius: 12px;
+}
+
+.practice-card--flipped {
+  transform: rotateY(180deg);
+}
+
+.practice-card__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.practice-card__back {
+  transform: rotateY(180deg);
+}
+
+.practice-word {
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.practice-translation {
+  font-size: 22px;
+  font-weight: 500;
+  color: #333;
+}
+
+.practice-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.btn-know, .btn-dont-know, .btn-next {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 24px;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.btn-know:hover, .btn-dont-know:hover, .btn-next:hover { opacity: 0.88; }
+.btn-know:active, .btn-dont-know:active, .btn-next:active { transform: scale(0.97); }
+
+.btn-know { background: #4caf50; }
+.btn-dont-know { background: #f44336; }
+.btn-next { background: #4a90e2; }
+
+/* ── Results Card ── */
+.practice-results-card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 48px;
+  box-shadow: 0 20px 40px rgba(0, 89, 187, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  min-width: 320px;
+}
+
+.practice-results__title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #181c23;
+  margin: 0;
+}
+
+.practice-results__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+}
+
+.practice-results__stat {
+  background: #f4f6fb;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.practice-results__stat-value {
+  font-family: 'Manrope', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0059bb;
+}
+
+.practice-results__stat-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8125rem;
+  color: #414754;
+  font-weight: 500;
+}
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;
@@ -211,7 +366,7 @@ body{
 }
 
 .app-root{width:100%;padding:12px}
-main{min-height:60vh}
+main{}
 
 button{font-family:inherit}
 
@@ -222,23 +377,85 @@ button{font-family:inherit}
 /* NavBar */
 .nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
   padding: 12px;
   background: transparent;
   border-bottom: 1px solid var(--border);
 }
+
+.nav__logo {
+  font-size: 2rem;
+  color: var(--accent);
+  margin-right: 4px;
+}
+
+.nav__desktop {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  align-items: center;
+}
+
+.nav__hamburger {
+  display: none !important;
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  padding: 6px;
+  border-radius: 8px;
+  font-size: 2.4rem;
+}
+
+.nav__hamburger .material-symbols-outlined {
+  font-size: 2.4rem;
+}
+
+.nav__hamburger:hover {
+  background: var(--accent-bg);
+}
+
+.nav__mobile {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0 4px;
+  border-top: 1px solid var(--border);
+}
+
 .nav button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   background: transparent;
   border: 1px solid transparent;
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
   color: var(--text);
+  font-size: 1rem;
 }
+
+.nav button .material-symbols-outlined {
+  font-size: 1.3rem;
+}
+
 .nav button:hover {
   background: var(--accent-bg);
   color: var(--accent-600);
+}
+
+@media (max-width: 640px) {
+  .nav__desktop {
+    display: none;
+  }
+  .nav__hamburger {
+    display: flex !important;
+  }
 }
 
 /* WordCard */

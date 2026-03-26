@@ -2,11 +2,12 @@ import { useEffect } from 'react'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import NavBar from './NavBar'
 import WordsLibrary from '../pages/WordsLibrary'
-import ImportWords from '../pages/ImportWords'
-import Practice from '../pages/Practice'
-import Login from '../pages/Login'
-import Register from '../pages/Register'
+import ImportWords from '../pages/ImportWords/ImportWords'
+import Login from '../pages/Login/Login'
+import Register from '../pages/Register/Register'
 import AdminPage from '../pages/AdminPage/AdminPage'
+import Practice from '../pages/Practice'
+import UserProgress from '../pages/UserProgress/UserProgress'
 import { ProtectedRoute } from './ProtectedRoute'
 import { ToastContainer } from 'react-toastify'
 import useStore from '../stor/useStore'
@@ -28,12 +29,13 @@ export default function AppRoutes() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={!user ? <Navigate to="/login" replace /> : user.role === "admin" ? <AdminPage /> : <Practice />} />
+          <Route path="/" element={!user ? <Navigate to="/login" replace /> : user.role === "admin" ? <AdminPage /> : <WordsLibrary />} />
           <Route path="/library" element={<ProtectedRoute><WordsLibrary /></ProtectedRoute>} />
           <Route path="/import" element={<ProtectedRoute><ImportWords /></ProtectedRoute>} />
           <Route path="/practice" element={<ProtectedRoute><Practice /></ProtectedRoute>} />
+          <Route path="/progress" element={<ProtectedRoute><UserProgress /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute role="admin"><AdminPage /></ProtectedRoute>} />
-          <Route path="*" element={!user ? <Navigate to="/login" replace /> : user.role === "admin" ? <AdminPage /> : <Practice />} />
+          <Route path="*" element={!user ? <Navigate to="/login" replace /> : user.role === "admin" ? <AdminPage /> : <WordsLibrary />} />
         </Routes>
         <ToastContainer position="top-right" autoClose={5000} />
       </main>

@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { ingestWords, enrichWord, fetchWords } from '../api/words'
-import { getTrainingQueue, postTrainingResult } from '../api/training'
 import { getProgress } from '../api/users'
 import { login as apiLogin } from '../api/auth'
 import api from '../api/axios'
@@ -16,8 +15,10 @@ export const useStore: any = create((set: any, get: any) => ({
     try {
       const token = localStorage.getItem('token')
       if (!token) return null
-      const raw = localStorage.getItem('user')
-      return raw ? JSON.parse(raw) : null
+      const userId = localStorage.getItem('userId')
+      const role = localStorage.getItem('role')
+      const name = localStorage.getItem('userName')
+      return userId ? { id: userId, role, name } : null
     } catch { return null }
   })(),
   loading: true,
@@ -55,25 +56,6 @@ export const useStore: any = create((set: any, get: any) => ({
       throw e
     }
   },
-  fetchQueue: async (user_id: string, count = 10) => {
-    try {
-      const data = await getTrainingQueue(user_id, count)
-      set({ queue: data || [] })
-      return data
-    } catch (e) {
-      console.error('fetchQueue failed', e)
-      throw e
-    }
-  },
-  submitResult: async (result: any) => {
-    try {
-      const data = await postTrainingResult(result)
-      return data
-    } catch (e) {
-      console.error('submitResult failed', e)
-      throw e
-    }
-  },
   fetchProgress: async (user_id: string) => {
     try {
       const data = await getProgress(user_id)
@@ -88,17 +70,17 @@ export const useStore: any = create((set: any, get: any) => ({
     const data = await apiLogin({ email, password })
     // server returns { access_token, user_id, role, expires_at }
     const token = data?.access_token
-    const user = token ? { id: data.user_id, role: data.role } : null
+    const user = token ? { id: data.user_id, role: data.role, name: data.name ?? email } : null
     if (token) {
       try {
         localStorage.setItem('token', token)
+        localStorage.setItem('userId', data.user_id)
+        localStorage.setItem('role', data.role)
+        localStorage.setItem('userName', data.name ?? email)
       } catch { /* ignore */ }
       set({ token })
     }
     if (user) {
-      try {
-        localStorage.setItem('user', JSON.stringify(user))
-      } catch { /* ignore */ }
       set({ user })
     }
     set({ isAuthenticated: Boolean(token) })
@@ -107,7 +89,9 @@ export const useStore: any = create((set: any, get: any) => ({
   logout: () => {
     try {
       localStorage.removeItem('token')
-      localStorage.removeItem('user')
+      localStorage.removeItem('userId')
+      localStorage.removeItem('role')
+      localStorage.removeItem('userName')
     } catch { /* ignore */ }
     set({ user: null, token: null, isAuthenticated: false })
   },
@@ -131,7 +115,8 @@ export const useStore: any = create((set: any, get: any) => ({
     } catch (err) {
       try {
         localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        localStorage.removeItem('userId')
+        localStorage.removeItem('role')
       } catch { /* ignore */ }
 
       set({ user: null, token: null, loading: false, isAuthenticated: false })
